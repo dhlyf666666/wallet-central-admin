@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FeeTransferMapper">
+    
+    <resultMap type="FeeTransfer" id="FeeTransferResult">
+        <result property="id"    column="id"    />
+        <result property="fromAddress"    column="from_address"    />
+        <result property="toAddress"    column="to_address"    />
+        <result property="amount"    column="amount"    />
+        <result property="txid"    column="txid"    />
+        <result property="status"    column="status"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="accountId"    column="account_id"    />
+        <result property="chainType"    column="chain_type"    />
+    </resultMap>
+
+    <sql id="selectFeeTransferVo">
+        select id, from_address, to_address, amount, txid, status, ctime, mtime, account_id, chain_type from fee_transfer
+    </sql>
+
+    <select id="selectFeeTransferList" parameterType="FeeTransfer" resultMap="FeeTransferResult">
+        <include refid="selectFeeTransferVo"/>
+        <where>  
+            <if test="fromAddress != null  and fromAddress != ''"> and from_address = #{fromAddress}</if>
+            <if test="toAddress != null  and toAddress != ''"> and to_address = #{toAddress}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="txid != null  and txid != ''"> and txid = #{txid}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="accountId != null "> and account_id = #{accountId}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+        </where>
+    </select>
+    
+    <select id="selectFeeTransferById" parameterType="Long" resultMap="FeeTransferResult">
+        <include refid="selectFeeTransferVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFeeTransfer" parameterType="FeeTransfer" useGeneratedKeys="true" keyProperty="id">
+        insert into fee_transfer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fromAddress != null and fromAddress != ''">from_address,</if>
+            <if test="toAddress != null and toAddress != ''">to_address,</if>
+            <if test="amount != null">amount,</if>
+            <if test="txid != null and txid != ''">txid,</if>
+            <if test="status != null">status,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="accountId != null">account_id,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fromAddress != null and fromAddress != ''">#{fromAddress},</if>
+            <if test="toAddress != null and toAddress != ''">#{toAddress},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="txid != null and txid != ''">#{txid},</if>
+            <if test="status != null">#{status},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="accountId != null">#{accountId},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFeeTransfer" parameterType="FeeTransfer">
+        update fee_transfer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fromAddress != null and fromAddress != ''">from_address = #{fromAddress},</if>
+            <if test="toAddress != null and toAddress != ''">to_address = #{toAddress},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="txid != null and txid != ''">txid = #{txid},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="accountId != null">account_id = #{accountId},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFeeTransferById" parameterType="Long">
+        delete from fee_transfer where id = #{id}
+    </delete>
+
+    <delete id="deleteFeeTransferByIds" parameterType="String">
+        delete from fee_transfer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

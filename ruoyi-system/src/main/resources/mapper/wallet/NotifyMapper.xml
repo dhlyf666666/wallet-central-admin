@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.NotifyMapper">
+
+    <resultMap type="Notify" id="NotifyResult">
+        <result property="id"    column="id"    />
+        <result property="applicationType"    column="application_type"    />
+<!--        <result property="params"    column="params"    />-->
+        <result property="url"    column="url"    />
+        <result property="status"    column="status"    />
+        <result property="errorCount"    column="error_count"    />
+        <result property="message"    column="message"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="chainType"    column="chain_type"    />
+    </resultMap>
+
+    <sql id="selectNotifyVo">
+        select id, application_type, params, url, status, error_count, message, ctime, mtime, chain_type from notify
+    </sql>
+
+    <select id="selectNotifyList" parameterType="Notify" resultMap="NotifyResult">
+        <include refid="selectNotifyVo"/>
+        <where>
+            <if test="applicationType != null  and applicationType != ''"> and application_type = #{applicationType}</if>
+            <if test="params != null  and params != ''"> and params = #{params}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="errorCount != null "> and error_count = #{errorCount}</if>
+            <if test="message != null  and message != ''"> and message = #{message}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+        </where>
+    </select>
+
+    <select id="selectNotifyById" parameterType="Long" resultMap="NotifyResult">
+        <include refid="selectNotifyVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertNotify" parameterType="Notify" useGeneratedKeys="true" keyProperty="id">
+        insert into notify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applicationType != null and applicationType != ''">application_type,</if>
+            <if test="params != null">params,</if>
+            <if test="url != null and url != ''">url,</if>
+            <if test="status != null">status,</if>
+            <if test="errorCount != null">error_count,</if>
+            <if test="message != null">message,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applicationType != null and applicationType != ''">#{applicationType},</if>
+            <if test="params != null">#{params},</if>
+            <if test="url != null and url != ''">#{url},</if>
+            <if test="status != null">#{status},</if>
+            <if test="errorCount != null">#{errorCount},</if>
+            <if test="message != null">#{message},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateNotify" parameterType="Notify">
+        update notify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applicationType != null and applicationType != ''">application_type = #{applicationType},</if>
+            <if test="params != null">params = #{params},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="errorCount != null">error_count = #{errorCount},</if>
+            <if test="message != null">message = #{message},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteNotifyById" parameterType="Long">
+        delete from notify where id = #{id}
+    </delete>
+
+    <delete id="deleteNotifyByIds" parameterType="String">
+        delete from notify where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

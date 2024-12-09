@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CollectMapper">
+
+    <resultMap type="Collect" id="CollectResult">
+        <result property="id"    column="id"    />
+        <result property="transactionId"    column="transaction_id"    />
+        <result property="type"    column="type"    />
+        <result property="contractAddress"    column="contract_address"    />
+        <result property="collectFromAddress"    column="collect_from_address"    />
+        <result property="collectToAddress"    column="collect_to_address"    />
+        <result property="collectAmount"    column="collect_amount"    />
+        <result property="collectHash"    column="collect_hash"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="chainType"    column="chain_type"    />
+        <result property="coinId"    column="coin_id"    />
+        <result property="coinName"    column="coin_name"    />
+    </resultMap>
+
+    <sql id="selectCollectVo">
+        select id, transaction_id, type, contract_address, collect_from_address, collect_to_address, collect_amount, collect_hash, ctime, mtime, chain_type, coinId, coinName from collect
+    </sql>
+
+    <select id="selectCollectList" parameterType="Collect" resultMap="CollectResult">
+        <include refid="selectCollectVo"/>
+        <where>
+            <if test="transactionId != null "> and transaction_id = #{transactionId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="contractAddress != null  and contractAddress != ''"> and contract_address = #{contractAddress}</if>
+            <if test="collectFromAddress != null  and collectFromAddress != ''"> and collect_from_address = #{collectFromAddress}</if>
+            <if test="collectToAddress != null  and collectToAddress != ''"> and collect_to_address = #{collectToAddress}</if>
+            <if test="collectAmount != null "> and collect_amount = #{collectAmount}</if>
+            <if test="collectHash != null  and collectHash != ''"> and collect_hash = #{collectHash}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+            <if test="coinId != null "> and coin_id = #{coinId}</if>
+            <if test="coinName != null  and coinName != ''"> and coin_name like concat('%', #{coinName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectCollectById" parameterType="Long" resultMap="CollectResult">
+        <include refid="selectCollectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCollect" parameterType="Collect" useGeneratedKeys="true" keyProperty="id">
+        insert into collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="contractAddress != null and contractAddress != ''">contract_address,</if>
+            <if test="collectFromAddress != null and collectFromAddress != ''">collect_from_address,</if>
+            <if test="collectToAddress != null and collectToAddress != ''">collect_to_address,</if>
+            <if test="collectAmount != null">collect_amount,</if>
+            <if test="collectHash != null and collectHash != ''">collect_hash,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+            <if test="coinId != null">coin_id,</if>
+            <if test="coinName != null">coin_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="transactionId != null">#{transactionId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="contractAddress != null and contractAddress != ''">#{contractAddress},</if>
+            <if test="collectFromAddress != null and collectFromAddress != ''">#{collectFromAddress},</if>
+            <if test="collectToAddress != null and collectToAddress != ''">#{collectToAddress},</if>
+            <if test="collectAmount != null">#{collectAmount},</if>
+            <if test="collectHash != null and collectHash != ''">#{collectHash},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+            <if test="coinId != null">#{coinId},</if>
+            <if test="coinName != null">#{coinName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCollect" parameterType="Collect">
+        update collect
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="contractAddress != null and contractAddress != ''">contract_address = #{contractAddress},</if>
+            <if test="collectFromAddress != null and collectFromAddress != ''">collect_from_address = #{collectFromAddress},</if>
+            <if test="collectToAddress != null and collectToAddress != ''">collect_to_address = #{collectToAddress},</if>
+            <if test="collectAmount != null">collect_amount = #{collectAmount},</if>
+            <if test="collectHash != null and collectHash != ''">collect_hash = #{collectHash},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+            <if test="coinId != null">coin_id = #{coinId},</if>
+            <if test="coinName != null">coin_name = #{coinName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCollectById" parameterType="Long">
+        delete from collect where id = #{id}
+    </delete>
+
+    <delete id="deleteCollectByIds" parameterType="String">
+        delete from collect where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

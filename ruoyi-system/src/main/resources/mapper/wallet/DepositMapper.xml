@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DepositMapper">
+
+    <resultMap type="Deposit" id="DepositResult">
+        <result property="id"    column="id"    />
+        <result property="symbol"    column="symbol"    />
+        <result property="transactionType"    column="transaction_type"    />
+        <result property="fromAddress"    column="from_address"    />
+        <result property="toAddress"    column="to_address"    />
+        <result property="amount"    column="amount"    />
+        <result property="contract"    column="contract"    />
+        <result property="hash"    column="hash"    />
+        <result property="blockNumber"    column="block_number"    />
+        <result property="status"    column="status"    />
+        <result property="isCollect"    column="is_collect"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="chainType"    column="chain_type"    />
+        <result property="coinId"    column="coin_id"    />
+    </resultMap>
+
+    <sql id="selectDepositVo">
+        select id, symbol, transaction_type, from_address, to_address, amount, contract, hash, block_number, status, is_collect, ctime, mtime, chain_type, coinId from deposit
+    </sql>
+
+    <select id="selectDepositList" parameterType="Deposit" resultMap="DepositResult">
+        <include refid="selectDepositVo"/>
+        <where>
+            <if test="symbol != null  and symbol != ''"> and symbol = #{symbol}</if>
+            <if test="transactionType != null "> and transaction_type = #{transactionType}</if>
+            <if test="fromAddress != null  and fromAddress != ''"> and from_address = #{fromAddress}</if>
+            <if test="toAddress != null  and toAddress != ''"> and to_address = #{toAddress}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="contract != null  and contract != ''"> and contract = #{contract}</if>
+            <if test="hash != null  and hash != ''"> and hash = #{hash}</if>
+            <if test="blockNumber != null "> and block_number = #{blockNumber}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="isCollect != null "> and is_collect = #{isCollect}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+            <if test="coinId != null "> and coin_id = #{coinId}</if>
+        </where>
+    </select>
+
+    <select id="selectDepositById" parameterType="Long" resultMap="DepositResult">
+        <include refid="selectDepositVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeposit" parameterType="Deposit" useGeneratedKeys="true" keyProperty="id">
+        insert into deposit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="symbol != null and symbol != ''">symbol,</if>
+            <if test="transactionType != null">transaction_type,</if>
+            <if test="fromAddress != null and fromAddress != ''">from_address,</if>
+            <if test="toAddress != null and toAddress != ''">to_address,</if>
+            <if test="amount != null">amount,</if>
+            <if test="contract != null">contract,</if>
+            <if test="hash != null and hash != ''">hash,</if>
+            <if test="blockNumber != null">block_number,</if>
+            <if test="status != null">status,</if>
+            <if test="isCollect != null">is_collect,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+            <if test="coinId != null">coin_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="symbol != null and symbol != ''">#{symbol},</if>
+            <if test="transactionType != null">#{transactionType},</if>
+            <if test="fromAddress != null and fromAddress != ''">#{fromAddress},</if>
+            <if test="toAddress != null and toAddress != ''">#{toAddress},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="contract != null">#{contract},</if>
+            <if test="hash != null and hash != ''">#{hash},</if>
+            <if test="blockNumber != null">#{blockNumber},</if>
+            <if test="status != null">#{status},</if>
+            <if test="isCollect != null">#{isCollect},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+            <if test="coinId != null">#{coinId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDeposit" parameterType="Deposit">
+        update deposit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="symbol != null and symbol != ''">symbol = #{symbol},</if>
+            <if test="transactionType != null">transaction_type = #{transactionType},</if>
+            <if test="fromAddress != null and fromAddress != ''">from_address = #{fromAddress},</if>
+            <if test="toAddress != null and toAddress != ''">to_address = #{toAddress},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="contract != null">contract = #{contract},</if>
+            <if test="hash != null and hash != ''">hash = #{hash},</if>
+            <if test="blockNumber != null">block_number = #{blockNumber},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="isCollect != null">is_collect = #{isCollect},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+            <if test="coinId != null">coin_id = #{coinId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDepositById" parameterType="Long">
+        delete from deposit where id = #{id}
+    </delete>
+
+    <delete id="deleteDepositByIds" parameterType="String">
+        delete from deposit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

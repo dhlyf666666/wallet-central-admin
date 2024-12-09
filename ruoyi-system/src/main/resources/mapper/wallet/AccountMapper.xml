@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AccountMapper">
+
+    <resultMap type="Account" id="AccountResult">
+        <result property="id"    column="id"    />
+        <result property="coinId"    column="coin_id"    />
+        <result property="address"    column="address"    />
+        <result property="balance"    column="balance"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="chainType"    column="chain_type"    />
+        <result property="coinName"    column="coin_name"    />
+    </resultMap>
+
+    <sql id="selectAccountVo">
+        select id, coin_id, address, balance, ctime, mtime, chain_type, coin_name from account
+    </sql>
+
+    <select id="selectAccountList" parameterType="Account" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        <where>
+            <if test="coinId != null "> and coin_id = #{coinId}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="balance != null "> and balance = #{balance}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+            <if test="coinName != null  and coinName != ''"> and coin_name like concat('%', #{coinName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectAccountById" parameterType="Long" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAccount" parameterType="Account" useGeneratedKeys="true" keyProperty="id">
+        insert into account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="coinId != null">coin_id,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="balance != null">balance,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+            <if test="coinName != null">coin_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="coinId != null">#{coinId},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+            <if test="coinName != null">#{coinName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAccount" parameterType="Account">
+        update account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="coinId != null">coin_id = #{coinId},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+            <if test="coinName != null">coin_name = #{coinName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccountById" parameterType="Long">
+        delete from account where id = #{id}
+    </delete>
+
+    <delete id="deleteAccountByIds" parameterType="String">
+        delete from account where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

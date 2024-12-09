@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AddressMapper">
+    
+    <resultMap type="Address" id="AddressResult">
+        <result property="id"    column="id"    />
+        <result property="address"    column="address"    />
+        <result property="privateKey"    column="private_key"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="mtime"    column="mtime"    />
+        <result property="chainType"    column="chain_type"    />
+    </resultMap>
+
+    <sql id="selectAddressVo">
+        select id, address, private_key, ctime, mtime, chain_type from address
+    </sql>
+
+    <select id="selectAddressList" parameterType="Address" resultMap="AddressResult">
+        <include refid="selectAddressVo"/>
+        <where>  
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="privateKey != null  and privateKey != ''"> and private_key = #{privateKey}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="mtime != null "> and mtime = #{mtime}</if>
+            <if test="chainType != null  and chainType != ''"> and chain_type = #{chainType}</if>
+        </where>
+    </select>
+    
+    <select id="selectAddressById" parameterType="Long" resultMap="AddressResult">
+        <include refid="selectAddressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAddress" parameterType="Address" useGeneratedKeys="true" keyProperty="id">
+        insert into address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="address != null and address != ''">address,</if>
+            <if test="privateKey != null and privateKey != ''">private_key,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="mtime != null">mtime,</if>
+            <if test="chainType != null and chainType != ''">chain_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="privateKey != null and privateKey != ''">#{privateKey},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="mtime != null">#{mtime},</if>
+            <if test="chainType != null and chainType != ''">#{chainType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddress" parameterType="Address">
+        update address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="privateKey != null and privateKey != ''">private_key = #{privateKey},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="mtime != null">mtime = #{mtime},</if>
+            <if test="chainType != null and chainType != ''">chain_type = #{chainType},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAddressById" parameterType="Long">
+        delete from address where id = #{id}
+    </delete>
+
+    <delete id="deleteAddressByIds" parameterType="String">
+        delete from address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
